@@ -1,7 +1,8 @@
 package online.muydinov.securedoc.service.impl;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import online.muydinov.securedoc.exception.ApiException;
 import online.muydinov.securedoc.service.EmailService;
