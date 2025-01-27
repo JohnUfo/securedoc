@@ -36,14 +36,6 @@ public abstract class Auditable {
     @NotNull
     private Long updatedBy;
 
-    @OneToMany
-    @JoinColumn(
-            name = "owner_id",
-            referencedColumnName = "id",
-            foreignKey = @ForeignKey(name = "fk_user_owner",value = ConstraintMode.CONSTRAINT)
-    )
-    private UserEntity owner;
-
     @NotNull
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -55,10 +47,10 @@ public abstract class Auditable {
 
     @PrePersist
     public void beforePersist() {
-        var userId = RequestContext.getUserId();
-        if (userId == null) {
-            throw new ApiException("Cannot persist entity without user ID in RequestContext for this thread");
-        }
+        var userId = 0L;// RequestContext.getUserId();
+//        if (userId == null) {
+//            throw new ApiException("Cannot persist entity without user ID in RequestContext for this thread");
+//        }
         setCreatedAt(now());
         setCreatedBy(userId);
         setUpdatedBy(userId);
@@ -67,10 +59,10 @@ public abstract class Auditable {
 
     @PreUpdate
     public void beforeUpdate() {
-        var userId = RequestContext.getUserId();
-        if (userId == null) {
-            throw new ApiException("Cannot update entity without user ID in RequestContext for this thread");
-        }
+        var userId = 0L;//RequestContext.getUserId();
+//        if (userId == null) {
+//            throw new ApiException("Cannot update entity without user ID in RequestContext for this thread");
+//        }
         setUpdatedAt(now());
         setUpdatedBy(userId);
     }

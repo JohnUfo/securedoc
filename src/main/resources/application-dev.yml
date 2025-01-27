@@ -8,8 +8,8 @@ CONTAINER_PORT: 8085
 ACTIVE_PROFILE: dev
 
 
-EMAIL_HOST: live.smtp.mailtrap.io
+EMAIL_HOST: smtp.gmail.com
 EMAIL_PORT: 587
-EMAIL_ID: smtp@mailtrap.io
-EMAIL_PASSWORD: 61f9641a3f3cba5f81138265fd65523d
+EMAIL_ID: hvjjj83@gmail.com
+EMAIL_PASSWORD: zwwi rkkt ekzy utqf
 VERIFY_EMAIL_HOST: http://localhost:8085
