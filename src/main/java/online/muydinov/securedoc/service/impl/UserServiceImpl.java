@@ -33,12 +33,12 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final CredentialRepository credentialRepository;
     private final ConfirmationRepository confirmationRepository;
-//    private final BCryptPasswordEncoder encoder;
+    //    private final BCryptPasswordEncoder encoder;
     private final ApplicationEventPublisher publisher;
 
     @Override
     public void createUser(String firstName, String lastName, String email, String password) {
-        var userEntity = userRepository.save(createNewUser(firstName,lastName,email,password));
+        var userEntity = userRepository.save(createNewUser(firstName, lastName, email));
         var credentialEntity = new CredentialEntity(userEntity, password);
         credentialRepository.save(credentialEntity);
         var confirmation = new ConfirmationEntity(userEntity);
@@ -52,8 +52,26 @@ public class UserServiceImpl implements UserService {
         return role.orElseThrow(() -> new ApiException("Role not found"));
     }
 
-    private UserEntity createNewUser(String firstName, String lastName, String email, String password) {
+    @Override
+    public void verifyAccountKey(String key) {
+        var confirmationEntity = getUserConfirmation(key);
+        var userEntity = getUserEntityByEmail(confirmationEntity.getUserEntity().getEmail());
+        userEntity.setEnabled(true);
+        userRepository.save(userEntity);
+        confirmationRepository.delete(confirmationEntity);
+    }
+
+    private UserEntity getUserEntityByEmail(String email) {
+        var userByEmail = userRepository.findByEmailIgnoreCase(email);
+        return userByEmail.orElseThrow(() -> new ApiException("User not found"));
+    }
+
+    private ConfirmationEntity getUserConfirmation(String key) {
+        return confirmationRepository.findByKey(key).orElseThrow(() -> new ApiException("Confirmation key not found"));
+    }
+
+    private UserEntity createNewUser(String firstName, String lastName, String email) {
         var role = getRoleName(Authority.USER.name());
-        return createUserEntity(firstName,lastName,email,role);
+        return createUserEntity(firstName, lastName, email, role);
     }
 }
