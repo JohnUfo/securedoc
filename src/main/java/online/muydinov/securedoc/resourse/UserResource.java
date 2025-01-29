@@ -38,7 +38,7 @@ public class UserResource {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Response> test() {
+    public ResponseEntity<Response> login() {
 //        authenticationManager.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(user.getEmail(), user.getPassword()));
         return ResponseEntity.ok().build();
     }
