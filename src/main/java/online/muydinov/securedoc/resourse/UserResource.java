@@ -8,7 +8,6 @@ import online.muydinov.securedoc.dtoRequest.UserRequest;
 import online.muydinov.securedoc.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -24,7 +23,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class UserResource {
 
     private final UserService userService;
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
     @PostMapping("/register")
     public ResponseEntity<Response> saveUser(@RequestBody @Valid UserRequest user, HttpServletRequest request) {
@@ -38,10 +37,9 @@ public class UserResource {
         return ResponseEntity.ok().body(getResponse(request, emptyMap(), "Account verified", OK));
     }
 
-
     @PostMapping("/login")
-    public ResponseEntity<Response> test(@RequestBody UserRequest user) {
-        authenticationManager.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(user.getEmail(), user.getPassword()));
+    public ResponseEntity<Response> test() {
+//        authenticationManager.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(user.getEmail(), user.getPassword()));
         return ResponseEntity.ok().build();
     }
 
