@@ -8,9 +8,12 @@ import online.muydinov.securedoc.dtoRequest.UserRequest;
 import online.muydinov.securedoc.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.Map;
 
 import static java.util.Collections.emptyMap;
 import static online.muydinov.securedoc.utils.RequestUtils.getResponse;
@@ -38,9 +41,9 @@ public class UserResource {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Response> login() {
-//        authenticationManager.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(user.getEmail(), user.getPassword()));
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> login(@RequestBody UserRequest user) {
+        Authentication authenticate = authenticationManager.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(user.getEmail(), user.getPassword()));
+        return ResponseEntity.ok().body(Map.of("user", authenticate));
     }
 
     private URI getUri() {
