@@ -3,12 +3,15 @@ package online.muydinov.securedoc.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import online.muydinov.securedoc.cache.CacheStore;
+import online.muydinov.securedoc.domain.RequestContext;
 import online.muydinov.securedoc.entity.ConfirmationEntity;
 import online.muydinov.securedoc.entity.CredentialEntity;
 import online.muydinov.securedoc.entity.RoleEntity;
 import online.muydinov.securedoc.entity.UserEntity;
 import online.muydinov.securedoc.enumeration.Authority;
 import online.muydinov.securedoc.enumeration.EventType;
+import online.muydinov.securedoc.enumeration.LoginType;
 import online.muydinov.securedoc.event.UserEvent;
 import online.muydinov.securedoc.exception.ApiException;
 import online.muydinov.securedoc.repository.ConfirmationRepository;
@@ -19,6 +22,7 @@ import online.muydinov.securedoc.service.UserService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import static online.muydinov.securedoc.utils.UserUtils.createUserEntity;
@@ -34,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private final CredentialRepository credentialRepository;
     private final ConfirmationRepository confirmationRepository;
     //    private final BCryptPasswordEncoder encoder;
+    private final CacheStore<String, Integer> userCache;
     private final ApplicationEventPublisher publisher;
 
     @Override
@@ -59,6 +64,31 @@ public class UserServiceImpl implements UserService {
         userEntity.setEnabled(true);
         userRepository.save(userEntity);
         confirmationRepository.delete(confirmationEntity);
+    }
+
+    @Override
+    public void updateLoginAttempt(String email, LoginType loginType) {
+        var userEntity = getUserEntityByEmail(email);
+        RequestContext.setUserId(userEntity.getId());
+        switch (loginType) {
+            case LOGIN_ATTEMPT -> {
+                if (userCache.get(email) == null) {
+                    userEntity.setLoginAttempts(0);
+                    userEntity.setAccountNonLocked(true);
+                }
+                userEntity.setLoginAttempts(userEntity.getLoginAttempts() + 1);
+                userCache.put(email, userEntity.getLoginAttempts());
+                if (userCache.get(email) > 5) {
+                    userEntity.setAccountNonLocked(false);
+                }
+            }
+            case LOGIN_SUCCESS -> {
+                userEntity.setAccountNonLocked(true);
+                userEntity.setLoginAttempts(0);
+                userEntity.setLastLogin(LocalDateTime.now());
+                userCache.evict(email);
+            }
+        }
     }
 
     private UserEntity getUserEntityByEmail(String email) {
