@@ -14,16 +14,16 @@ CREATE TABLE IF NOT EXISTS users
     qr_code_image_uri  TEXT DEFAULT NULL,
     image_url           CHARACTER VARYING(255) DEFAULT 'https://cdn-icons-png.flaticon.com/512/149/149071.png',
     last_login          TIMESTAMP(6) WITH TIME ZONE     DEFAULT CURRENT_TIMESTAMP,
-    login_attempts      INTEGER                         DEFAULT 0,
-    mfa                 BOOLEAN                NOT NULL DEFAULT FALSE,
-    enable              BOOLEAN                NOT NULL DEFAULT FALSE,
-    account_non_expired BOOLEAN                NOT NULL DEFAULT FALSE,
-    account_non_locked  BOOLEAN                NOT NULL DEFAULT FALSE,
-    created_by          BIGINT                 NOT NULL,
-    updated_by          BIGINT                 NOT NULL,
-    created_at   TIMESTAMP(6) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at   TIMESTAMP(6) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT uq_users_email UNIQUE (email),
+                                         login_attempts      INTEGER                         DEFAULT 0,
+                                         mfa                 BOOLEAN                NOT NULL DEFAULT FALSE,
+                                         enable              BOOLEAN                NOT NULL DEFAULT FALSE,
+                                         account_non_expired BOOLEAN                NOT NULL DEFAULT FALSE,
+                                         account_non_locked  BOOLEAN                NOT NULL DEFAULT FALSE,
+                                         created_by          BIGINT                 NOT NULL,
+                                         updated_by          BIGINT                 NOT NULL,
+                                         created_at   TIMESTAMP(6) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                                         updated_at   TIMESTAMP(6) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                                         CONSTRAINT uq_users_email UNIQUE (email),
     CONSTRAINT uq_users_user_id UNIQUE (user_id),
     CONSTRAINT fk_users_created_by FOREIGN KEY (created_by) REFERENCES users (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_users_updated_by FOREIGN KEY (updated_by) REFERENCES users (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
@@ -38,12 +38,12 @@ CREATE TABLE IF NOT EXISTS confirmations
     created_by   BIGINT NOT NULL,
     updated_by   BIGINT NOT NULL,
     created_at   TIMESTAMP(6) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at   TIMESTAMP(6) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT uq_confirmations_user_id UNIQUE (user_id),
+                                  updated_at   TIMESTAMP(6) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                                  CONSTRAINT uq_confirmations_user_id UNIQUE (user_id),
     CONSTRAINT uq_confirmations_key UNIQUE (key),
     CONSTRAINT fk_confirmations_user_id FOREIGN KEY (user_id) REFERENCES users (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT fk_confirmations_created_by FOREIGN KEY (created_by) REFERENCES users (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT fk_confirmations_updated_by FOREIGN KEY (updated_by) REFERENCES users (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_confirmations_updated_by FOREIGN KEY (updated_by) REFERENCES users (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE
     );
 
 CREATE TABLE IF NOT EXISTS credentials
@@ -77,8 +77,8 @@ CREATE TABLE IF NOT EXISTS documents
     created_by     BIGINT                 NOT NULL,
     updated_by     BIGINT                 NOT NULL,
     created_at     TIMESTAMP(6) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at     TIMESTAMP(6) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT uq_documents_document_id UNIQUE (document_id),
+                                    updated_at     TIMESTAMP(6) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                                    CONSTRAINT uq_documents_document_id UNIQUE (document_id),
     CONSTRAINT fk_documents_created_by FOREIGN KEY (created_by) REFERENCES users (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT fk_documents_updated_by FOREIGN KEY (updated_by) REFERENCES users (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE RESTRICT
     );
@@ -92,10 +92,10 @@ CREATE TABLE IF NOT EXISTS roles
     created_by   BIGINT NOT NULL,
     updated_by   BIGINT NOT NULL,
     created_at   TIMESTAMP(6) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at   TIMESTAMP(6) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_roles_created_by FOREIGN KEY (created_by) REFERENCES users (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE RESTRICT,
+                                  updated_at   TIMESTAMP(6) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                                  CONSTRAINT fk_roles_created_by FOREIGN KEY (created_by) REFERENCES users (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT fk_roles_updated_by FOREIGN KEY (updated_by) REFERENCES users (id) MATCH SIMPLE ON UPDATE CASCADE ON DELETE RESTRICT
-);
+    );
 
 CREATE TABLE IF NOT EXISTS user_roles
 (
