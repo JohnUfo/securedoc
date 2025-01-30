@@ -42,7 +42,8 @@ public class UserResource {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserRequest user) {
-        Authentication authenticate = authenticationManager.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(user.getEmail(), user.getPassword()));
+        UsernamePasswordAuthenticationToken unauthenticated = UsernamePasswordAuthenticationToken.unauthenticated(user.getEmail(), user.getPassword());
+        Authentication authenticate = authenticationManager.authenticate(unauthenticated);
         return ResponseEntity.ok().body(Map.of("user", authenticate));
     }
 
