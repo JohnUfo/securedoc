@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import online.muydinov.securedoc.cache.CacheStore;
 import online.muydinov.securedoc.domain.RequestContext;
+import online.muydinov.securedoc.dto.User;
 import online.muydinov.securedoc.entity.ConfirmationEntity;
 import online.muydinov.securedoc.entity.CredentialEntity;
 import online.muydinov.securedoc.entity.RoleEntity;
@@ -26,6 +27,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 import static online.muydinov.securedoc.utils.UserUtils.createUserEntity;
+import static online.muydinov.securedoc.utils.UserUtils.fromUserEntity;
 
 @Service
 @RequiredArgsConstructor
@@ -89,6 +91,24 @@ public class UserServiceImpl implements UserService {
                 userCache.evict(email);
             }
         }
+    }
+
+    @Override
+    public User getUserByUserId(String userId) {
+        var userEntity = userRepository.findUserByUserId(userId).orElseThrow(() -> new ApiException("User not found"));
+        return fromUserEntity(userEntity, userEntity.getRole(), getUserCredentialById(userEntity.getId()));
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        UserEntity userEntity = getUserEntityByEmail(email);
+        return fromUserEntity(userEntity, userEntity.getRole(), getUserCredentialById(userEntity.getId()));
+    }
+
+    @Override
+    public CredentialEntity getUserCredentialById(Long userId) {
+        var credentialById = credentialRepository.getCredentialByUserEntityId(userId);
+        return credentialById.orElseThrow(() -> new ApiException("Unable to find user credential"));
     }
 
     private UserEntity getUserEntityByEmail(String email) {

@@ -1,7 +1,7 @@
 package online.muydinov.securedoc.enumeration;
 
 public enum TokenType {
-    ACCESSS("access-token"),
+    ACCESS("access-token"),
     REFRESH("refresh-token");
 
     private final String value;

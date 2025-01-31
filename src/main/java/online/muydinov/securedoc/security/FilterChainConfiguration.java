@@ -34,7 +34,7 @@ public class FilterChainConfiguration {
 
     @Bean
     public AuthenticationManager authenticationManager(UserDetailsService userDetailsService) {
-        var myOwnAuthenticationProvider = new MyOwnAuthenticationProvider(userDetailsService);
+        var myOwnAuthenticationProvider = new ApiAuthenticationprovider(userDetailsService);
         return new ProviderManager(myOwnAuthenticationProvider);
     }
 

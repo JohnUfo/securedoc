@@ -1,6 +1,7 @@
 package online.muydinov.securedoc.domain;
 
 
+import io.jsonwebtoken.Claims;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +15,7 @@ import java.util.List;
 @Setter
 public class TokenData {
     private User user;
-//    private Claims claims;
+    private Claims claims;
     private boolean valid;
     private List<GrantedAuthority> authorities;
 }
